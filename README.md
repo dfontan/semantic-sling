@@ -12,13 +12,13 @@
 
 Build and Install the OSGI bundle
 
-    a. If you want to deploy the bundle automatically:
+a. If you want to deploy the bundle automatically:
 
-        `mvn -PautoInstallBundle clean install`
+    `mvn -PautoInstallBundle clean install`
 
-    b. If you only want to build the bundle:
+b. If you only want to build the bundle:
 
-        `mvn clean install`
+    `mvn clean install`
 
 If you have content in the repository tied to the Sling instance you are installing to, you can test the install by requesting any of your content nodes with a .ttl extension.  If you have not loaded content, you can create test content following the cURL example provided in [Discovering Sling in 15 minutes](http://sling.apache.org/site/discover-sling-in-15-minutes.html).
 
