@@ -21,6 +21,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jackrabbit.spi.Name;
+import org.apache.jackrabbit.spi.NameFactory;
+import org.apache.jackrabbit.spi.commons.conversion.NameParser;
+import org.apache.jackrabbit.spi.commons.name.NameFactoryImpl;
+import org.apache.jackrabbit.spi.commons.namespace.SessionNamespaceResolver;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.servlets.semantic.rdf.model.CollectionResource;
 import org.apache.sling.servlets.semantic.rdf.model.CollectionTypes;
@@ -57,10 +62,12 @@ public class TtlWriter implements RdfResourceWriter {
 	
 	private final Format dateFormatter;
 	
+	private final NameFactory nameFactory;
+	
 	public TtlWriter() {
 		
 		this.dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		
+		this.nameFactory = NameFactoryImpl.getInstance();
 	}
 	
 	@Override
@@ -118,7 +125,6 @@ public class TtlWriter implements RdfResourceWriter {
 		 */
 		while( propertyIterator.hasNext() ) {
 			Property curProperty = propertyIterator.nextProperty();
-			//graph.addAllTriples( this.createTriplesFromProperty( r, curProperty, base ) );
 			graph.addTriple( this.createSingleTriple(r, curProperty, base ));
 		}
 		
@@ -199,7 +205,8 @@ public class TtlWriter implements RdfResourceWriter {
 	 * <p>
 	 * <h2>Object</h2>
 	 * How the object is defined will be based on the type of the value.  There are 12 value types supported by this function (listed below).  Any other value type 
-	 * (such as UNDEFINED) is defined as though the property value is a String.
+	 * (such as UNDEFINED) is defined as though the property value is a String. Refer to http://www.day.com/specs/jcr/2.0/3_Repository_Model.html#3.6.1 Property Types 
+	 * for further explanation of each type and it's usage in JCR.
 	 * </p>
 	 * <p>
 	 * <h3>Property Types</h3>
@@ -249,20 +256,20 @@ public class TtlWriter implements RdfResourceWriter {
 			CollectionResourceBuilder collectionBuilder = new CollectionResourceBuilder( CollectionTypes.seq );
 			
 			for ( Value curValue : p.getValues() ) {
-				collectionBuilder.addResource( this.buildObject(p, curValue, base));
+				collectionBuilder.addResource( this.buildObject(p, curValue, r.getResourceResolver().adaptTo( Session.class ), base));
 			}
 			
 			return new TripleImpl( subject, predicate, collectionBuilder.build() );
 			
 		}
 		
-		RDFResource object = this.buildObject(p, p.getValue(), base);
+		RDFResource object = this.buildObject(p, p.getValue(), r.getResourceResolver().adaptTo( Session.class ), base);
 		
 		return new TripleImpl( subject, predicate, object );
 		
 	}
 	
-	private RDFResource buildObject( Property p, Value v, String base ) throws ValueFormatException, IllegalStateException, RepositoryException, IOException {
+	private RDFResource buildObject( Property p, Value v, Session session, String base ) throws ValueFormatException, IllegalStateException, RepositoryException, IOException {
 		switch ( p.getType() ) {
 		
 		case PropertyType.STRING :
@@ -290,7 +297,17 @@ public class TtlWriter implements RdfResourceWriter {
 				return new ResourceReferenceImpl( v.getString() );
 			}
 		case PropertyType.NAME :
-			return new LiteralResourceImpl( v.getString(), "string" );
+			/*
+			 * See http://www.day.com/specs/jcr/2.0/3_Repository_Model.html#3.1.3 Names for the specifics on the 
+			 * construction of JCR Names and their usage.  
+			 */
+			Name nameProperty = NameParser.parse( v.getString(), new SessionNamespaceResolver( session ), this.nameFactory );
+			
+			if( !StringUtils.isEmpty(nameProperty.getNamespaceURI())) {
+				return new ResourceReferenceImpl( this.writePrefixUri( nameProperty.getNamespaceURI() ) + nameProperty.getLocalName() );
+			}
+			return new ResourceReferenceImpl( nameProperty.getLocalName() );
+			
 		case PropertyType.REFERENCE : 
 			/*
 			 * A REFERENCE should point to an existing NODE.  Cases where it does not should be rare since a REFERENCE supports referential integrity 
