@@ -1,4 +1,4 @@
-package org.apache.sling.servlets.semantic.rdf.writer;
+package com.citytechinc.sling.semantic.servlets.rdf.writer;
 
 import java.io.IOException;
 
@@ -7,7 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.sling.api.resource.Resource;
-import org.apache.sling.servlets.semantic.rdf.writer.impl.InvalidObjectException;
+
+import com.citytechinc.sling.semantic.servlets.rdf.writer.impl.InvalidObjectException;
 
 
 public interface RdfResourceWriter {

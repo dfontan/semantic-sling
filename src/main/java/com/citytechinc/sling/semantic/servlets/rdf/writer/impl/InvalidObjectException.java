@@ -1,4 +1,4 @@
-package org.apache.sling.servlets.semantic.rdf.writer.impl;
+package com.citytechinc.sling.semantic.servlets.rdf.writer.impl;
 
 public class InvalidObjectException extends Exception {
 

@@ -1,6 +1,6 @@
-package org.apache.sling.servlets.semantic.rdf.model.impl;
+package com.citytechinc.sling.semantic.servlets.rdf.model.impl;
 
-import org.apache.sling.servlets.semantic.rdf.model.LiteralResource;
+import com.citytechinc.sling.semantic.servlets.rdf.model.LiteralResource;
 
 public class LiteralResourceImpl implements LiteralResource {
 

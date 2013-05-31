@@ -1,11 +1,11 @@
-package org.apache.sling.servlets.semantic.rdf.model.impl;
+package com.citytechinc.sling.semantic.servlets.rdf.model.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.sling.servlets.semantic.rdf.model.CollectionResource;
-import org.apache.sling.servlets.semantic.rdf.model.CollectionTypes;
-import org.apache.sling.servlets.semantic.rdf.model.RDFResource;
+import com.citytechinc.sling.semantic.servlets.rdf.model.CollectionResource;
+import com.citytechinc.sling.semantic.servlets.rdf.model.CollectionTypes;
+import com.citytechinc.sling.semantic.servlets.rdf.model.RDFResource;
 
 
 public class CollectionResourceBuilder {

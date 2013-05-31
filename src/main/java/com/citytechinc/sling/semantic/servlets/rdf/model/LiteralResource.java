@@ -1,4 +1,4 @@
-package org.apache.sling.servlets.semantic.rdf.model;
+package com.citytechinc.sling.semantic.servlets.rdf.model;
 
 public interface LiteralResource extends RDFResource {
 

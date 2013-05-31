@@ -1,8 +1,8 @@
-package org.apache.sling.servlets.semantic.rdf.model.impl;
+package com.citytechinc.sling.semantic.servlets.rdf.model.impl;
 
-import org.apache.sling.servlets.semantic.rdf.model.RDFResource;
-import org.apache.sling.servlets.semantic.rdf.model.ResourceReference;
-import org.apache.sling.servlets.semantic.rdf.model.Triple;
+import com.citytechinc.sling.semantic.servlets.rdf.model.RDFResource;
+import com.citytechinc.sling.semantic.servlets.rdf.model.ResourceReference;
+import com.citytechinc.sling.semantic.servlets.rdf.model.Triple;
 
 public class TripleImpl implements Triple {
 
